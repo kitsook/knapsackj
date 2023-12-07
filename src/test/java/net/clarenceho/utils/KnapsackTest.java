@@ -1,52 +1,62 @@
 package net.clarenceho.utils;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 // include test cases from https://exercism.org/tracks/elixir/exercises/knapsack
 @ExtendWith(MockitoExtension.class)
 class KnapsackTest {
-    @Test
-    void emptyItemsShouldReturnZero() {
-        int result = Knapsack.maximumValue(Collections.emptyList(), 100);
+    public static Stream<Knapsack> sourceMethod() {
+        return Stream.of(new KnapsackRecursive(), new KnapsackQuick());
+    }
+
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void emptyItemsShouldReturnZero(Knapsack knapsack) {
+        int result = knapsack.maximumValue(Collections.emptyList(), 100);
         assertThat(result).isZero();
     }
 
-    @Test
-    void singleItemWithinMax() {
-        int result = Knapsack.maximumValue(Collections.singletonList(new Knapsack.Item(10, 42)),
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void singleItemWithinMax(Knapsack knapsack) {
+        int result = knapsack.maximumValue(Collections.singletonList(new Knapsack.Item(10, 42)),
             10);
         assertThat(result).isEqualTo(42);
     }
 
-    @Test
-    void singleItemExceedMax() {
-        int result = Knapsack.maximumValue(Collections.singletonList(new Knapsack.Item(10, 42)),
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void singleItemExceedMax(Knapsack knapsack) {
+        int result = knapsack.maximumValue(Collections.singletonList(new Knapsack.Item(10, 42)),
             8);
         assertThat(result).isZero();
     }
 
-    @Test
-    void twoItemsWithinMax() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void twoItemsWithinMax(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(7, 42),
             new Knapsack.Item(13, 1337)
         );
-        int result = Knapsack.maximumValue(items, 25);
+        int result = knapsack.maximumValue(items, 25);
         assertThat(result).isEqualTo(1379);
     }
 
-    @Test
-    void cannotBeGreedyByWeight() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void cannotBeGreedyByWeight(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(2, 5),
             new Knapsack.Item(2, 5),
@@ -54,12 +64,13 @@ class KnapsackTest {
             new Knapsack.Item(2, 5),
             new Knapsack.Item(10, 21)
         );
-        int result = Knapsack.maximumValue(items, 10);
+        int result = knapsack.maximumValue(items, 10);
         assertThat(result).isEqualTo(21);
     }
 
-    @Test
-    void cannotBeGreedyByValue() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void cannotBeGreedyByValue(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(2, 20),
             new Knapsack.Item(2, 20),
@@ -67,24 +78,26 @@ class KnapsackTest {
             new Knapsack.Item(2, 20),
             new Knapsack.Item(10, 50)
         );
-        int result = Knapsack.maximumValue(items, 10);
+        int result = knapsack.maximumValue(items, 10);
         assertThat(result).isEqualTo(80);
     }
 
-    @Test
-    void lessWeightIsMore() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void lessWeightIsMore(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(5, 10),
             new Knapsack.Item(4, 40),
             new Knapsack.Item(6, 30),
             new Knapsack.Item(4, 50)
         );
-        int result = Knapsack.maximumValue(items, 10);
+        int result = knapsack.maximumValue(items, 10);
         assertThat(result).isEqualTo(90);
     }
 
-    @Test
-    void moreItems() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void moreItems(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(25, 350),
             new Knapsack.Item(35, 400),
@@ -95,12 +108,13 @@ class KnapsackTest {
             new Knapsack.Item(2, 5),
             new Knapsack.Item(2, 5)
         );
-        int result = Knapsack.maximumValue(items, 104);
+        int result = knapsack.maximumValue(items, 104);
         assertThat(result).isEqualTo(900);
     }
 
-    @Test
-    void evenMoreItems() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void evenMoreItems(Knapsack knapsack) {
         List<Knapsack.Item> items = Arrays.asList(
             new Knapsack.Item(70, 135),
             new Knapsack.Item(73, 139),
@@ -118,18 +132,18 @@ class KnapsackTest {
             new Knapsack.Item(118, 229),
             new Knapsack.Item(120, 240)
         );
-        int result = Knapsack.maximumValue(items, 750);
+        int result = knapsack.maximumValue(items, 750);
         assertThat(result).isEqualTo(1458);
     }
 
-    @Disabled
-    @Test
-    void aThousandInKnapsack() {
+    @ParameterizedTest
+    @MethodSource("sourceMethod")
+    void aThousandInKnapsack(Knapsack knapsack) {
         List<Knapsack.Item> items = new ArrayList<>();
         for (int i = 0; i < 999; i++) {
             items.add(new Knapsack.Item(1, 2));
         }
-        int result = Knapsack.maximumValue(items, 999);
+        int result = knapsack.maximumValue(items, 999);
         assertThat(result).isEqualTo(2 * 999);
     }
 }
