@@ -20,7 +20,6 @@ public class Knapsack {
         return Stream
             .concat(Stream.of(0).map(ignored -> item.value + maximumValue(tail, maxWeight - item.weight)),
                 Stream.of(0).map(ignored -> maximumValue(tail, maxWeight)))
-            //.parallel()
             .max(Integer::compare)
             .orElseThrow();
     }

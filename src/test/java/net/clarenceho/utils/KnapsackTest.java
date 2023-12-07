@@ -1,9 +1,11 @@
 package net.clarenceho.utils;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -118,5 +120,16 @@ class KnapsackTest {
         );
         int result = Knapsack.maximumValue(items, 750);
         assertThat(result).isEqualTo(1458);
+    }
+
+    @Disabled
+    @Test
+    void aThousandInKnapsack() {
+        List<Knapsack.Item> items = new ArrayList<>();
+        for (int i = 0; i < 999; i++) {
+            items.add(new Knapsack.Item(1, 2));
+        }
+        int result = Knapsack.maximumValue(items, 999);
+        assertThat(result).isEqualTo(2 * 999);
     }
 }
