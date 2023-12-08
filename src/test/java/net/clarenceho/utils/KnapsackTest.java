@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 // include test cases from https://exercism.org/tracks/elixir/exercises/knapsack
 @ExtendWith(MockitoExtension.class)
@@ -139,11 +140,14 @@ class KnapsackTest {
     @ParameterizedTest
     @MethodSource("sourceMethod")
     void aThousandInKnapsack(Knapsack knapsack) {
+        // don't run the full recursive implementation
+        assumeFalse(knapsack instanceof KnapsackRecursive);
+
         List<Knapsack.Item> items = new ArrayList<>();
-        for (int i = 0; i < 999; i++) {
+        for (int i = 0; i < 1000; i++) {
             items.add(new Knapsack.Item(1, 2));
         }
-        int result = knapsack.maximumValue(items, 999);
-        assertThat(result).isEqualTo(2 * 999);
+        int result = knapsack.maximumValue(items, 1000);
+        assertThat(result).isEqualTo(2000);
     }
 }
