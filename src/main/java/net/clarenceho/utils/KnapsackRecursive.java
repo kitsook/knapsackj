@@ -9,6 +9,7 @@ import java.util.stream.Stream;
  * of items. But the implementation is easy to understand.
  */
 public class KnapsackRecursive implements Knapsack {
+    @Override
     public int maximumValue(List<Knapsack.Item> items, int maxWeight) {
         if (items.isEmpty()) {
             return 0;
